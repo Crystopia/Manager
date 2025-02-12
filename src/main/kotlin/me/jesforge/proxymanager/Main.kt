@@ -6,6 +6,7 @@ import com.velocitypowered.api.event.proxy.ProxyInitializeEvent
 import com.velocitypowered.api.plugin.Dependency
 import com.velocitypowered.api.plugin.Plugin
 import com.velocitypowered.api.proxy.ProxyServer
+import me.jesforge.proxymanager.events.ChatEvent
 import me.jesforge.proxymanager.events.TabList
 import net.luckperms.api.LuckPerms
 import net.luckperms.api.LuckPermsProvider
@@ -38,6 +39,6 @@ class Main @Inject constructor(val logger: Logger, val server: ProxyServer) {
         this.luckpermsAPI = LuckPermsProvider.get()
 
         server.eventManager.register(this, TabList())
-
+        server.eventManager.register(this, ChatEvent())
     }
 }

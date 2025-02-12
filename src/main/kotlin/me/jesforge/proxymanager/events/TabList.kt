@@ -5,6 +5,7 @@ import com.velocitypowered.api.event.player.ServerPostConnectEvent
 import com.velocitypowered.api.proxy.Player
 import com.velocitypowered.api.proxy.player.TabListEntry
 import me.jesforge.proxymanager.Main
+import me.jesforge.proxymanager.utils.getLuckPermsPrefix
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.minimessage.MiniMessage
 
@@ -39,16 +40,8 @@ class TabList {
         Main.instance.server.allPlayers.forEach { onlinePlayer ->
             tabList.addEntry(
                 TabListEntry.builder().tabList(tabList).profile(onlinePlayer.gameProfile)
-                    .displayName(getLuckPermsPrefix(onlinePlayer)).gameMode(1).build()
+                    .displayName(mm.deserialize(getLuckPermsPrefix(onlinePlayer))).gameMode(1).build()
             )
         }
-    }
-
-    private fun getLuckPermsPrefix(player: Player): Component {
-        val luckPerms = Main.instance.luckpermsAPI
-        val user = luckPerms!!.userManager.getUser(player.uniqueId)
-
-        val prefix = user?.cachedData?.metaData?.prefix
-        return mm.deserialize(prefix.toString() + " " + player.username)
     }
 }
