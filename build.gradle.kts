@@ -27,6 +27,8 @@ repositories {
 }
 
 dependencies {
+    // Luckperms
+    compileOnly("net.luckperms:api:5.4")
 
     // Velocity
     compileOnly("com.velocitypowered:velocity-api:3.4.0-SNAPSHOT")
