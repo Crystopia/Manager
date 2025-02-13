@@ -1,0 +1,15 @@
+{
+  "id": "proxymanager",
+  "name": "ProxyManager",
+  "version": "1.0.0",
+  "description": "ProxyManager and maintenance/chat/tab/etc. provider...",
+  "authors": [
+    "jesforge"
+  ],
+  "dependencies": [
+    {
+      "id": "luckperms"
+    }
+  ],
+  "main": "me.jesforge.proxymanager.Main"
+}

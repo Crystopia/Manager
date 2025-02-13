@@ -3,6 +3,7 @@ package me.jesforge.servermanager;
 import dev.jorel.commandapi.CommandAPI
 import dev.jorel.commandapi.CommandAPIBukkitConfig
 import me.jesforge.servermanager.config.ConfigManager
+import me.jesforge.servermanager.events.ChatEvent
 import org.bukkit.plugin.java.JavaPlugin
 
 
@@ -28,6 +29,8 @@ class Main : JavaPlugin() {
         CommandAPI.onEnable()
 
         // val settings = ConfigManager.settings
+
+        server.pluginManager.registerEvents(ChatEvent(), this)
 
         logger.info("Plugin enabled!")
 

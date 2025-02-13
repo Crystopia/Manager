@@ -1,9 +1,12 @@
+import net.minecrell.pluginyml.bukkit.BukkitPluginDescription
+
 plugins {
     kotlin("jvm") version "2.0.20-Beta1"
     id("com.gradleup.shadow") version "9.0.0-beta8"
     id("org.jetbrains.gradle.plugin.idea-ext") version "1.1.8"
     kotlin("plugin.serialization") version "2.1.10"
     id("io.papermc.paperweight.userdev") version "1.7.5"
+    id("de.eldoria.plugin-yml.bukkit") version "0.7.0"
 }
 
 group = "me.jesforge"
@@ -40,4 +43,14 @@ tasks {
     assemble {
         dependsOn(shadowJar)
     }
+}
+
+bukkit {
+    name = "ServerManager"
+    version= "1.0.0"
+    main = "me.jesforge.servermanager.Main"
+    foliaSupported = false
+    load = BukkitPluginDescription.PluginLoadOrder.STARTUP
+    authors = listOf("jesforge")
+
 }
