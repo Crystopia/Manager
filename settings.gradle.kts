@@ -1,1 +1,4 @@
-rootProject.name = "ProxyManager"
+rootProject.name = "NetworkManager"
+
+include("paper")
+include("velocity")
