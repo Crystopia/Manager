@@ -13,7 +13,8 @@ data class SettingsData(
 
 @Serializable
 data class ServerData(
-    var version: String,
+    var versionData: ServerVersionData,
+    var serverVersion: String = "",
     var defaultServer: String,
     val bypassJoinLimitPermission: String = "",
     var playerLimit: Int = 100
@@ -22,7 +23,7 @@ data class ServerData(
 @Serializable
 data class ServerVersionData(
     var version: MutableList<String>,
-    var protocolState: MutableList<Int>,
+    var protocols: MutableList<Int>,
     val kickMessage: String,
     val motd: ServerVersionMotdData,
 )
@@ -36,7 +37,7 @@ data class ServerVersionMotdData(
 
 @Serializable
 data class ServerMotdData(
-    var description: String, var hover: String, var versionText: String
+    var description: String,
 )
 
 @Serializable

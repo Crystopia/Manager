@@ -17,7 +17,7 @@ fun updateTabList(player: Player) {
         ), // Header
         mm.deserialize(
             "\n\n          <color:#c0ff73>ʏᴏᴜ ᴀʀᴇ ᴄᴜʀʀᴇɴᴛʟʏ ᴏɴ ${player.currentServer.get().server.serverInfo.name}</color>          \n          <gray>ѕᴇʀᴠᴇʀ: ${player.currentServer.get().server.playersConnected.size.toString()} <st><b> </b></st> ɴᴇᴛᴡᴏʀᴋ: ${Main.instance.server.playerCount.toString()}</gray>          \n\nᴄʜᴀᴛᴍᴏᴅᴇ: {chatmode}                                           \nᴠᴇʀѕɪᴏɴ: {version}                                             \n<gray></gray>".replace(
-                "{version}", ConfigManager.settings.serverData.version
+                "{version}", ConfigManager.settings.serverData.serverVersion
             ).replace("{chatmode}", ConfigManager.player.players[player.uniqueId.toString()]!!.chatMode.toString())
         )
     )

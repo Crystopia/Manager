@@ -10,9 +10,18 @@ object ConfigManager {
     val settings = settingsFile.loadConfig(
         SettingsData(
             motd = ServerMotdData(
-                description = "", versionText = "", hover = ""
+                description = "",
             ), serverData = ServerData(
-                version = "1.0.0", defaultServer = "Lobby"
+                bypassJoinLimitPermission = "", playerLimit = 100, versionData = ServerVersionData(
+                    version = mutableListOf(),
+                    protocols = mutableListOf(),
+                    kickMessage = "<color:#bae1ff>The current client version is no longer supported. \n" + "Please update to one of the Versions (<color:#ffeea3>{versions} </color>)\n" + "or always use the latest version \n" + "to avoid problems with some features.</color>\n" + "<gray>---------------</gray>\n" + "<color:#d8d4ff>ʀᴏʙɪᴛ ɪѕ ᴛʜɪɴᴋɪɴɢ...</color>",
+                    motd = ServerVersionMotdData(
+                        hoverText = "",
+                        description = "",
+                        versionText = "",
+                    )
+                ), defaultServer = "Lobby"
             ), maintenance = MaintenanceData(
                 motd = MaintenanceMotdData(
                     hover = "", versionText = "", description = ""

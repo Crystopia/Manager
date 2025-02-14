@@ -20,6 +20,10 @@ class JoinEvent {
         val mm = MiniMessage.miniMessage()
         val player = event.player
 
+        if (!ConfigManager.settings.serverData.versionData.protocols.contains(event.player.protocolVersion.protocol)) {
+            player.disconnect(mm.deserialize(ConfigManager.settings.serverData.versionData.kickMessage.replace("{versions}", ConfigManager.settings.serverData.versionData.version.toString())))
+        }
+
         if (ConfigManager.settings.maintenance.maintenance) {
             if (player.hasPermission(ConfigManager.settings.maintenance.bypassPermission)) {
                 player.sendMessage(mm.deserialize("<color:#d4daff>Bear in mind that maintenance work is currently in progress!</color>"))

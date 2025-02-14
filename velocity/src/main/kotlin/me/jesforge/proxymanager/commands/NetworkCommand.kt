@@ -22,13 +22,35 @@ class NetworkCommand {
             })
         }
         literalArgument("version") {
-            stringArgument("version") {
-                executes(CommandExecutor { commandSender, commandArguments ->
-                    ConfigManager.settings.serverData.version = commandArguments[0] as String
-                    ConfigManager.save()
+            literalArgument("add") {
+                stringArgument("version") {
+                    integerArgument("protocol") {
+                        executes(CommandExecutor { commandSender, commandArguments ->
+                            ConfigManager.settings.serverData.versionData.version.add(commandArguments[0].toString())
+                            ConfigManager.settings.serverData.versionData.protocols.add(
+                                commandArguments[1].toString().toInt()
+                            )
+                            ConfigManager.save()
 
-                    commandSender.sendMessage(mm.deserialize("<color:#9cffb1>The version is now updated</color>"))
-                })
+                            commandSender.sendMessage(mm.deserialize("<color:#9cffb1>The version is now updated</color>"))
+                        })
+                    }
+                }
+            }
+            literalArgument("remove") {
+                stringArgument("version") {
+                    integerArgument("protocol") {
+                        executes(CommandExecutor { commandSender, commandArguments ->
+                            ConfigManager.settings.serverData.versionData.version.remove(commandArguments[0].toString())
+                            ConfigManager.settings.serverData.versionData.protocols.remove(
+                                commandArguments[1].toString().toInt()
+                            )
+                            ConfigManager.save()
+
+                            commandSender.sendMessage(mm.deserialize("<color:#9cffb1>The version is now updated</color>"))
+                        })
+                    }
+                }
             }
         }
         literalArgument("playerLimit") {
@@ -41,6 +63,15 @@ class NetworkCommand {
                 })
             }
         }
-    }
+        literalArgument("serverVersion") {
+            stringArgument("version") {
+                executes(CommandExecutor { commandSender, commandArguments ->
+                    ConfigManager.settings.serverData.serverVersion = commandArguments[0] as String
+                    ConfigManager.save()
 
+                    commandSender.sendMessage(mm.deserialize("<color:#faffc9>Server Version Update ${commandArguments[0]}</color>"))
+                })
+            }
+        }
+    }
 }
