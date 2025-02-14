@@ -11,12 +11,14 @@ class ServerPingEvent {
 
     @Subscribe
     fun onServerPingEvent(event: ProxyPingEvent) {
+
+        // VERSION REMAKE
+        // FIX MOTD...
+
         if (ConfigManager.settings.maintenance.maintenance == true) {
-            defaultMotdCreator(event)
-        } else {
             maintenanceMotdCreator(event)
+        } else {
+            defaultMotdCreator(event)
         }
-
     }
-
 }

@@ -9,17 +9,16 @@ object ConfigManager {
 
     val settings = settingsFile.loadConfig(
         SettingsData(
-            bypassJoinLimitPermission = "", motd = ServerMotdData(
+            motd = ServerMotdData(
                 description = "", versionText = "", hover = ""
             ), serverData = ServerData(
-                version = "1.0.0"
+                version = "1.0.0", defaultServer = "Lobby"
             ), maintenance = MaintenanceData(
                 motd = MaintenanceMotdData(
                     hover = "", versionText = "", description = ""
                 ),
                 maintenance = false,
                 bypassPermission = "",
-                maintenanceServer = mutableListOf(),
             )
 
         )

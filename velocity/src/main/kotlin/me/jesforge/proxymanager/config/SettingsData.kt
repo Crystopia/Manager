@@ -7,14 +7,36 @@ import me.jesforge.proxymanager.utils.ChatNoitfiyType
 @Serializable
 data class SettingsData(
     var maintenance: MaintenanceData,
-    val bypassJoinLimitPermission: String = "",
     var motd: ServerMotdData,
     var serverData: ServerData,
 )
 
 @Serializable
 data class ServerData(
-    var version: String
+    var version: String,
+    var defaultServer: String,
+    val bypassJoinLimitPermission: String = "",
+    var playerLimit: Int = 100
+)
+
+@Serializable
+data class ServerVersionData(
+    var version: MutableList<String>,
+    var protocolState: MutableList<Int>,
+    val kickMessage: String,
+    val motd: ServerVersionMotdData,
+)
+
+@Serializable
+data class ServerVersionMotdData(
+    var description: String,
+    var versionText: String,
+    var hoverText: String,
+)
+
+@Serializable
+data class ServerMotdData(
+    var description: String, var hover: String, var versionText: String
 )
 
 @Serializable
@@ -22,16 +44,18 @@ data class MaintenanceData(
     var maintenance: Boolean,
     var bypassPermission: String,
     var motd: MaintenanceMotdData,
-    var maintenanceServer: MutableList<String>
+    var maintenanceServer: MutableMap<String, MaintenanceServerData> = mutableMapOf(),
+)
+
+@Serializable
+data class MaintenanceServerData(
+    var permission: String,
+    var enabled: Boolean,
+    var name: String,
 )
 
 @Serializable
 data class MaintenanceMotdData(
-    var description: String, var hover: String, var versionText: String
-)
-
-@Serializable
-data class ServerMotdData(
     var description: String, var hover: String, var versionText: String
 )
 

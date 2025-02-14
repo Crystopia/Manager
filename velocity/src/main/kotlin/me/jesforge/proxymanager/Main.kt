@@ -10,9 +10,7 @@ import me.jesforge.proxymanager.commands.ChatCommand
 import me.jesforge.proxymanager.commands.MaintenanceCommand
 import me.jesforge.proxymanager.commands.NetworkCommand
 import me.jesforge.proxymanager.config.ConfigManager
-import me.jesforge.proxymanager.events.ChatEvent
-import me.jesforge.proxymanager.events.JoinEvent
-import me.jesforge.proxymanager.events.ServerPingEvent
+import me.jesforge.proxymanager.events.*
 import net.luckperms.api.LuckPerms
 import net.luckperms.api.LuckPermsProvider
 import org.slf4j.Logger
@@ -47,6 +45,7 @@ class Main @Inject constructor(val logger: Logger, val server: ProxyServer) {
 
         this.luckpermsAPI = LuckPermsProvider.get()
 
+        server.eventManager.register(this, ServerPreConnectEvent())
         server.eventManager.register(this, ServerPingEvent())
         server.eventManager.register(this, JoinEvent())
         server.eventManager.register(this, ChatEvent())

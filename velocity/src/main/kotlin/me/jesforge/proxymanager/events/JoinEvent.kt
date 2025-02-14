@@ -1,7 +1,10 @@
 package me.jesforge.proxymanager.events
 
 import com.velocitypowered.api.event.Subscribe
+import com.velocitypowered.api.event.player.ServerConnectedEvent
 import com.velocitypowered.api.event.player.ServerPostConnectEvent
+import com.velocitypowered.api.event.player.ServerPreConnectEvent
+import me.jesforge.proxymanager.Main
 import me.jesforge.proxymanager.config.ConfigManager
 import me.jesforge.proxymanager.config.Player
 import me.jesforge.proxymanager.utils.ChatModeType
@@ -27,11 +30,22 @@ class JoinEvent {
                     )
                 )
             }
+        }
+
+        val playerLimit = ConfigManager.settings.serverData.playerLimit
+
+        if (playerLimit == Main.instance.server.allPlayers.size - 1) {
+            val player = Main.instance.server.getPlayer(event.player.uniqueId).get()
+
+            if (player.hasPermission(ConfigManager.settings.serverData.bypassJoinLimitPermission)) {
+            } else {
+                player.disconnect(mm.deserialize("<i><color:#99faff>The player limit has been reached! And you can only join again later. Please wait a bit.</color></i>"))
+            }
+        } else {
 
         }
 
         if (ConfigManager.player.players[player.toString()] == null) {
-            println("new Player")
             ConfigManager.player.players[player.uniqueId.toString()] = Player(
                 UUID = player.uniqueId.toString(),
                 chatMode = ChatModeType.ALL,
@@ -39,9 +53,6 @@ class JoinEvent {
             )
             ConfigManager.save()
         }
-
         updateTabList(player)
     }
-
-
 }
