@@ -6,8 +6,10 @@ object ConfigManager {
 
     private val settingsFile = File("plugins/ProxyManager/config.json")
     private val playerFile = File("plugins/ProxyManager/player.json")
+    private val banFile = File("plugins/ProxyManager/bans.json")
+    private val reportsFile = File("plugins/ProxyManager/reports.json")
 
-    val settings = settingsFile.loadConfig(
+    var settings = settingsFile.loadConfig(
         SettingsData(
             motd = ServerMotdData(
                 description = "",
@@ -32,11 +34,22 @@ object ConfigManager {
 
         )
     )
-    val player = playerFile.loadConfig(PlayerData())
+    var player = playerFile.loadConfig(PlayerData())
+    var ban = banFile.loadConfig(BanData())
+    var report = reportsFile.loadConfig(ReportData())
 
     fun save() {
         settingsFile.writeText(json.encodeToString(settings))
         playerFile.writeText(json.encodeToString(player))
+        banFile.writeText(json.encodeToString(ban))
+        reportsFile.writeText(json.encodeToString(report))
+    }
+
+    fun reload() {
+        settings = loadFromFile(settingsFile)
+        player = loadFromFile(playerFile)
+        ban = loadFromFile(banFile)
+        report = loadFromFile(reportsFile)
     }
 
 }

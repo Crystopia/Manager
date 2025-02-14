@@ -38,6 +38,8 @@ class Main @Inject constructor(val logger: Logger, val server: ProxyServer) {
 
         val settings = ConfigManager.settings
         val player = ConfigManager.player
+        val bans = ConfigManager.ban
+        val reports = ConfigManager.report
 
         MaintenanceCommand()
         ChatCommand()

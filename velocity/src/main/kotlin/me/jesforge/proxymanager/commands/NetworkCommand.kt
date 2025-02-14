@@ -16,7 +16,7 @@ class NetworkCommand {
     val command = commandTree("network") {
         literalArgument("reload") {
             executes(CommandExecutor { commandSender, commandArguments ->
-                ConfigManager.save()
+                ConfigManager.reload()
                 commandSender.sendMessage(mm.deserialize("<color:#c3ffbf>All data has been reloaded.</color>"))
 
             })
