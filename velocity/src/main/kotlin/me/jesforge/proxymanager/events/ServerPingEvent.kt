@@ -12,9 +12,9 @@ class ServerPingEvent {
     @Subscribe
     fun onServerPingEvent(event: ProxyPingEvent) {
         if (ConfigManager.settings.maintenance.maintenance == true) {
-            maintenanceMotdCreator(event)
-        } else {
             defaultMotdCreator(event)
+        } else {
+            maintenanceMotdCreator(event)
         }
 
     }

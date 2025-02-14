@@ -28,6 +28,7 @@ object ConfigManager {
 
     fun save() {
         settingsFile.writeText(json.encodeToString(settings))
+        playerFile.writeText(json.encodeToString(player))
     }
 
 }

@@ -24,7 +24,7 @@ fun maintenanceMotdCreator(event: ProxyPingEvent) {
             fakePlayerName, UUID.randomUUID()
         )
     ).description(motdText)
-        .favicon(event.ping.favicon.orElse(Favicon("https://crystopia.net/_next/image?url=%2Fimages%2Fcrystopia.png&w=828&q=75")))
+        .favicon(Favicon("https://crystopia.net/_next/image?url=%2Fimages%2Fcrystopia.png&w=828&q=75"))
         .build()
 
     event.ping = newPing
@@ -45,7 +45,7 @@ fun defaultMotdCreator(event: ProxyPingEvent) {
             fakePlayerName, UUID.randomUUID()
         )
     ).description(motdText)
-        .favicon(event.ping.favicon.orElse(Favicon("https://crystopia.net/_next/image?url=%2Fimages%2Fcrystopia.png&w=828&q=75")))
+        .favicon(Favicon("https://crystopia.net/_next/image?url=%2Fimages%2Fcrystopia.png&w=828&q=75"))
         .build()
 
     event.ping = newPing

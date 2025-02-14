@@ -23,9 +23,7 @@ class JoinEvent {
             } else {
                 player.disconnect(
                     mm.deserialize(
-                        "<color:#ffe8a8>Hey <b><color:#e5ffc4>{player}</color></b>, our network is currently undergoing maintenance work. \n" + "We are working for your gaming experience. \nPlease wait until we are do</color>\n" + "\nOn our <color:#66bfff>#discord</color> <gray>(ʜᴛᴛᴘѕ://ᴄʀʏѕᴛᴏᴘɪᴀ.ʟɪɴᴋ/ᴅɪѕᴄᴏʀᴅ)</gray>  \nyou can get more information about \nthe current status of the maintenance work.\n" + "\n\n" + "\n<gray>---------------</gray>\n<color:#d8d4ff>ʀᴏʙɪᴛ ɪѕ ᴛʜɪɴᴋɪɴɢ...</color>".replace(
-                            "{player}", player.username
-                        )
+                        "<color:#ffe8a8>Hey <b><color:#e5ffc4>${player.username}</color></b>, our network is currently undergoing maintenance work. \n" + "We are working for your gaming experience. \nPlease wait until we are do</color>\n" + "\nOn our <color:#66bfff>#discord</color> <gray>(ʜᴛᴛᴘѕ://ᴄʀʏѕᴛᴏᴘɪᴀ.ʟɪɴᴋ/ᴅɪѕᴄᴏʀᴅ)</gray>  \nyou can get more information about \nthe current status of the maintenance work.\n" + "\n\n" + "\n<gray>---------------</gray>\n<color:#d8d4ff>ʀᴏʙɪᴛ ɪѕ ᴛʜɪɴᴋɪɴɢ...</color>"
                     )
                 )
             }

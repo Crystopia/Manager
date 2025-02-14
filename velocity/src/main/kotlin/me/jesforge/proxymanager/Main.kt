@@ -8,6 +8,7 @@ import dev.jorel.commandapi.CommandAPI
 import dev.jorel.commandapi.CommandAPIVelocityConfig
 import me.jesforge.proxymanager.commands.ChatCommand
 import me.jesforge.proxymanager.commands.MaintenanceCommand
+import me.jesforge.proxymanager.commands.NetworkCommand
 import me.jesforge.proxymanager.config.ConfigManager
 import me.jesforge.proxymanager.events.ChatEvent
 import me.jesforge.proxymanager.events.JoinEvent
@@ -42,6 +43,7 @@ class Main @Inject constructor(val logger: Logger, val server: ProxyServer) {
 
         MaintenanceCommand()
         ChatCommand()
+        NetworkCommand()
 
         this.luckpermsAPI = LuckPermsProvider.get()
 
