@@ -1,5 +1,5 @@
 package me.jesforge.proxymanager.utils
 
-enum class ChatMode {
+enum class ChatModeType {
     SERVER, NONE, ALL
 }

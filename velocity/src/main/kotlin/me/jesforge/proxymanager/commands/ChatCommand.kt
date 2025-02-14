@@ -4,10 +4,10 @@ import com.velocitypowered.api.proxy.Player
 import dev.jorel.commandapi.executors.CommandExecutor
 import dev.jorel.commandapi.kotlindsl.commandTree
 import dev.jorel.commandapi.kotlindsl.literalArgument
-import dev.jorel.commandapi.kotlindsl.multiLiteralArgument
 import me.jesforge.proxymanager.config.ConfigManager
-import me.jesforge.proxymanager.utils.ChatMode
-import me.jesforge.proxymanager.utils.ChatNoitfiy
+import me.jesforge.proxymanager.utils.ChatModeType
+import me.jesforge.proxymanager.utils.ChatNoitfiyType
+import me.jesforge.proxymanager.utils.updateTabList
 import net.kyori.adventure.text.minimessage.MiniMessage
 
 class ChatCommand {
@@ -18,12 +18,14 @@ class ChatCommand {
                 executes(CommandExecutor { commandSource, commandArguments ->
                     val player = ConfigManager.player.players[(commandSource as Player).uniqueId.toString()]
 
-                    if (player!!.chatNotify == ChatNoitfiy.SERVER) {
+                    if (player!!.chatNotify == ChatNoitfiyType.SERVER) {
                         commandSource.sendMessage(mm.deserialize("<color:#ff91a5>The server mode is active and you will only receive messages from the server.</color>"))
                     } else {
-                        player.chatNotify = ChatNoitfiy.SERVER
-                        player.chatMode = ChatMode.SERVER
+                        player.chatNotify = ChatNoitfiyType.SERVER
+                        player.chatMode = ChatModeType.SERVER
+                        ConfigManager.save()
 
+                        updateTabList(commandSource)
                         commandSource.sendMessage(mm.deserialize("<color:#f8ffd4>You have activated server mode and now only receive server messages.</color>"))
                     }
                 })
@@ -32,12 +34,14 @@ class ChatCommand {
                 executes(CommandExecutor { commandSource, commandArguments ->
                     val player = ConfigManager.player.players[(commandSource as Player).uniqueId.toString()]
 
-                    if (player!!.chatNotify == ChatNoitfiy.ALL) {
+                    if (player!!.chatNotify == ChatNoitfiyType.ALL) {
                         commandSource.sendMessage(mm.deserialize("<color:#ff91a5>The global mode is active and you will receive messages from the server and the network.</color>"))
                     } else {
-                        player.chatNotify = ChatNoitfiy.ALL
-                        player.chatMode = ChatMode.ALL
+                        player.chatNotify = ChatNoitfiyType.ALL
+                        player.chatMode = ChatModeType.ALL
+                        ConfigManager.save()
 
+                        updateTabList(commandSource)
                         commandSource.sendMessage(mm.deserialize("<color:#f8ffd4>You have activated the global mode and now only receive global messages.</color>"))
                     }
 
@@ -47,17 +51,21 @@ class ChatCommand {
                 executes(CommandExecutor { commandSource, commandArguments ->
                     val player = ConfigManager.player.players[(commandSource as Player).uniqueId.toString()]
 
-                    if (player!!.chatNotify == ChatNoitfiy.NONE) {
+                    if (player!!.chatNotify == ChatNoitfiyType.NONE) {
                         commandSource.sendMessage(mm.deserialize("<color:#ff91a5>You already don't get any messages</color>"))
                     } else {
-                        player.chatNotify = ChatNoitfiy.NONE
-                        player.chatMode = ChatMode.NONE
+                        player.chatNotify = ChatNoitfiyType.NONE
+                        player.chatMode = ChatModeType.NONE
+                        ConfigManager.save()
 
+                        updateTabList(commandSource)
                         commandSource.sendMessage(mm.deserialize("<color:#f8ffd4>You now get no messages from players!</color>"))
                     }
                 })
             }
+
         }
     }
+
 
 }

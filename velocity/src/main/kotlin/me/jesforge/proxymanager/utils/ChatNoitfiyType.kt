@@ -1,5 +1,5 @@
 package me.jesforge.proxymanager.utils
 
-enum class ChatNoitfiy {
+enum class ChatNoitfiyType {
     SERVER, ALL, NONE
 }

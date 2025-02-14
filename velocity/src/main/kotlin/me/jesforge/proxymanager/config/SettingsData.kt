@@ -1,12 +1,38 @@
 package me.jesforge.proxymanager.config
 
 import kotlinx.serialization.Serializable
-import me.jesforge.proxymanager.utils.ChatMode
-import me.jesforge.proxymanager.utils.ChatNoitfiy
+import me.jesforge.proxymanager.utils.ChatModeType
+import me.jesforge.proxymanager.utils.ChatNoitfiyType
 
 @Serializable
 data class SettingsData(
-    var none: String = ""
+    var maintenance: MaintenanceData,
+    val bypassJoinLimitPermission: String = "",
+    var motd: ServerMotdData,
+    var serverData: ServerData,
+)
+
+@Serializable
+data class ServerData(
+    var version: String
+)
+
+@Serializable
+data class MaintenanceData(
+    var maintenance: Boolean,
+    var bypassPermission: String,
+    var motd: MaintenanceMotdData,
+    var maintenanceServer: MutableList<String>
+)
+
+@Serializable
+data class MaintenanceMotdData(
+    var description: String, var hover: String, var versionText: String
+)
+
+@Serializable
+data class ServerMotdData(
+    var description: String, var hover: String, var versionText: String
 )
 
 @Serializable
@@ -17,6 +43,6 @@ data class PlayerData(
 @Serializable
 data class Player(
     var UUID: String,
-    var chatMode: ChatMode,
-    var chatNotify: ChatNoitfiy,
+    var chatMode: ChatModeType,
+    var chatNotify: ChatNoitfiyType,
 )
