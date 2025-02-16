@@ -80,16 +80,9 @@ data class Player(
 @Serializable
 data class BanData(
     val bannedplayers: MutableMap<String, BannedPlayer> = mutableMapOf(),
+    val banArchiv: MutableList<BannedPlayer> = mutableListOf(),
     val templates: MutableMap<String, TemplatesData> = mutableMapOf(),
-    var banMessage: String = "<color:#ffa069>You have been banned from the server!</color>\n" +
-            "\n<color:#f7ffa1>And can only play on Crystopia.net \nagain after your punishment <gray>({time})</gray> has expired.</color>\n" +
-            "\n\n" +
-            "\n<color:#5effd1>Ban information:</color>\n" +
-            "\n<st><gray>-</gray></st> <color:#a6f2ff><b>Reason:</b></color> <color:#fee3ff>{reason}</color>\n" +
-            "\n<st><gray>-</gray></st> <color:#a6f2ff><b>Time:</b></color> <color:#fee3ff>{time}</color>\n" +
-            "\n<st><gray>-</gray></st> <color:#a6f2ff><b>ID:</b></color> <color:#fee3ff>{id}</color>\n" +
-            "\n<st><gray>-</gray></st> <color:#a6f2ff><b>UUID:</b></color> <color:#fee3ff>{uuid}</color>\n" +
-            "\n<st><gray>-</gray></st> <color:#a6f2ff><b>Created at:</b></color> <color:#fee3ff>{created}</color>"
+    var banMessage: String = "<color:#ff4133>You have been blocked and can no longer connect!</color>\n\n<color:#ff5e24>Your sentence is still <color:#fff2ab>{days}d {hours}h {minutes}m {seconds}s.</color></color>\n<color:#bababa>When your punishment is over, stick to our rules!</color>\n\n<color:#595959>Ban information</color>\n<color:#595959>Reason: <gray>{message}</gray></color>\n<color:#595959>ID: {id} UUID: {uuid} Created at: {createdAt}</color>"
 )
 
 @Serializable
@@ -104,22 +97,63 @@ data class TemplatesData(
 @Serializable
 data class BannedPlayer(
     var uuid: String,
-    var createdAt: String = Date().toString(),
+    var createdAt: String,
     var banUUID: String,
-    var banIntID: Int,
+    var banIntID: String,
     var reason: String,
+    var ended: Boolean = false,
 )
 
 @Serializable
 data class ReportData(
     val reportedPlayers: MutableMap<String, PlayerReportData> = mutableMapOf(),
+    val reportArchiv: MutableMap<String, PlayerReportData> = mutableMapOf(),
+    var reportAdminPermission: String = "crystopia.commands.report.managment",
 )
 
 @Serializable
 data class PlayerReportData(
     var uuid: String,
-    var createdAt: String = Date().toString(),
+    var createdAt: String,
     var message: String,
+    var images: MutableList<String>,
+    var collaborators: MutableList<String> = mutableListOf(),
+    var playerDiscordUsername: String,
     var playerUUID: String,
     var reporterUUID: String,
+    var claim: String? = null,
+    var resolve: Boolean? = null,
+    var notified: Boolean = false,
 )
+
+@Serializable
+data class MinecraftPlayerData(
+    var mcPlayers: MutableList<MinecraftPlayer> = mutableListOf(),
+)
+
+@Serializable
+data class MinecraftPlayer(
+    var uuid: String,
+    var joinedAt: String,
+    var lastJoinedAt: String,
+    var name: String,
+)
+
+@Serializable
+data class CommandSettingsData(
+    val servers: MutableMap<String, CommandPerissionData> = mutableMapOf(),
+    val bypassPermissions: String = "crystopia.bypass.commandblock",
+    val commandErrorMessage: String = "<color:#ff4c38>This command is not available for you or could not be found.</color>"
+)
+
+@Serializable
+data class CommandPerissionData(
+    val permissions: MutableMap<String, Command> = mutableMapOf(),
+)
+
+@Serializable
+data class Command(
+    val command: MutableList<String> = mutableListOf(),
+    val tabComplete: MutableList<String> = mutableListOf(),
+)
+

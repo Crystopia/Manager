@@ -20,9 +20,12 @@ dependencies {
 
     // JSON
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.0")
+    implementation("com.google.code.gson:gson:2.8.8")
 
     // CommandAPI
-    implementation("dev.jorel:commandapi-bukkit-kotlin:9.7.0")
+    // implementation("dev.jorel:commandapi-bukkit-kotlin:9.7.0")
+    implementation("dev.jorel:commandapi-velocity-kotlin:9.7.1-SNAPSHOT")
+    implementation("dev.jorel:commandapi-velocity-core:9.7.1-SNAPSHOT")
     implementation("dev.jorel:commandapi-velocity-shade:9.7.1-SNAPSHOT")
     implementation("net.kyori:adventure-api:4.18.0")
 }

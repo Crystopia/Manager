@@ -8,6 +8,8 @@ object ConfigManager {
     private val playerFile = File("plugins/ProxyManager/player.json")
     private val banFile = File("plugins/ProxyManager/bans.json")
     private val reportsFile = File("plugins/ProxyManager/reports.json")
+    private val mcPlayerFile = File("plugins/ProxyManager/playerCache.json")
+    private val commandsFile = File("plugins/ProxyManager/commands.json")
 
     var settings = settingsFile.loadConfig(
         SettingsData(
@@ -37,12 +39,16 @@ object ConfigManager {
     var player = playerFile.loadConfig(PlayerData())
     var ban = banFile.loadConfig(BanData())
     var report = reportsFile.loadConfig(ReportData())
+    var mcPlayerCache = mcPlayerFile.loadConfig(MinecraftPlayerData())
+    var commands = commandsFile.loadConfig(CommandSettingsData())
 
     fun save() {
         settingsFile.writeText(json.encodeToString(settings))
         playerFile.writeText(json.encodeToString(player))
         banFile.writeText(json.encodeToString(ban))
         reportsFile.writeText(json.encodeToString(report))
+        mcPlayerFile.writeText(json.encodeToString(mcPlayerCache))
+        commandsFile.writeText(json.encodeToString(commands))
     }
 
     fun reload() {
@@ -50,6 +56,8 @@ object ConfigManager {
         player = loadFromFile(playerFile)
         ban = loadFromFile(banFile)
         report = loadFromFile(reportsFile)
+        mcPlayerCache = loadFromFile(mcPlayerFile)
+        commands = loadFromFile(commandsFile)
     }
 
 }
