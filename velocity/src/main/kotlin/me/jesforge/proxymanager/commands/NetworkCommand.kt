@@ -5,6 +5,8 @@ import dev.jorel.commandapi.executors.CommandExecutor
 import dev.jorel.commandapi.kotlindsl.*
 import me.jesforge.proxymanager.Main
 import me.jesforge.proxymanager.config.BannedPlayer
+import me.jesforge.proxymanager.config.Command
+import me.jesforge.proxymanager.config.CommandPerissionData
 import me.jesforge.proxymanager.config.ConfigManager
 import me.jesforge.proxymanager.config.ConfigManager.player
 import me.jesforge.proxymanager.utils.ParseTime
@@ -20,6 +22,8 @@ import kotlin.time.toKotlinDuration
 
 class NetworkCommand {
     val mm = MiniMessage.miniMessage()
+
+    lateinit var serverSuggestion: String
 
     val command = commandTree("network") {
         withPermission("crystopia.commands.network")
@@ -783,38 +787,233 @@ class NetworkCommand {
         }
         literalArgument("commands") {
             literalArgument("add") {
-                replaceSuggestions(
-                    ArgumentSuggestions.strings {
-                        Main.instance.server.allServers.map { it.serverInfo.name }.toTypedArray()
-                    })
-                executes(CommandExecutor { commandSender, commandArguments ->
+                stringArgument("server") {
+                    replaceSuggestions(
+                        ArgumentSuggestions.strings {
+                            Main.instance.server.allServers.map {
+                                serverSuggestion = it.serverInfo.name
+                                it.serverInfo.name
+                            }.toTypedArray()
+                        })
+                    stringArgument("permission") {
+                        replaceSuggestions(
+                            ArgumentSuggestions.strings {
+                                ConfigManager.commands.servers[serverSuggestion]?.permissions?.keys?.toTypedArray()
+                                    ?: emptyArray()
+                            })
+                        textArgument("command") {
+                            booleanArgument("tabComplete") {
+                                executes(CommandExecutor { commandSender, commandArguments ->
 
-                })
+                                    val server = commandArguments[0] as String
+                                    val permission = commandArguments[1] as String
+                                    val command = commandArguments[2] as String
+                                    val tabComplete = commandArguments[3] as Boolean
+                                    val config = ConfigManager.commands.servers.getOrPut(server) {
+                                        CommandPerissionData(
+                                            permissions = mutableMapOf()
+                                        )
+                                    }
+
+                                    val permissionData = config.permissions.getOrPut(permission) {
+                                        Command(
+                                            command = mutableListOf(), tabComplete = mutableListOf()
+                                        )
+                                    }
+
+                                    ConfigManager.save()
+
+                                    if (config.permissions[permission]!!.command.contains(command)) {
+                                        commandSender.sendMessage(mm.deserialize("<color:#ff6961>This command already exists!</color>"))
+                                        return@CommandExecutor
+                                    } else {
+                                        config.permissions[permission]!!.command.add(command)
+                                    }
+
+                                    if (tabComplete) {
+                                        if (config.permissions[permission]!!.tabComplete.contains(command)) {
+                                            commandSender.sendMessage(mm.deserialize("<color:#ff6961>This command already exists! <gray>(tabComplete)<gray></color>"))
+                                            return@CommandExecutor
+                                        } else {
+                                            config.permissions[permission]!!.tabComplete.add(command)
+                                        }
+                                    }
+
+                                    ConfigManager.save()
+                                })
+                            }
+                        }
+                    }
+                }
                 literalArgument("ALL") {
-                    executes(CommandExecutor { commandSender, commandArguments ->
+                    stringArgument("permission") {
+                        replaceSuggestions(
+                            ArgumentSuggestions.strings {
+                                ConfigManager.commands.servers["ALL"]?.permissions?.keys?.toTypedArray() ?: emptyArray()
+                            })
+                        textArgument("command") {
+                            booleanArgument("tabComplete") {
+                                executes(CommandExecutor { commandSender, commandArguments ->
 
-                    })
+                                    val server = "ALL"
+                                    val permission = commandArguments[0] as String
+                                    val command = commandArguments[1] as String
+                                    val tabComplete = commandArguments[2] as Boolean
+                                    val config = ConfigManager.commands.servers.getOrPut(server) {
+                                        CommandPerissionData(
+                                            permissions = mutableMapOf()
+                                        )
+                                    }
+
+                                    val permissionData = config.permissions.getOrPut(permission) {
+                                        Command(
+                                            command = mutableListOf(), tabComplete = mutableListOf()
+                                        )
+                                    }
+
+                                    ConfigManager.save()
+
+                                    if (config.permissions[permission]!!.command.contains(command)) {
+                                        commandSender.sendMessage(mm.deserialize("<color:#ff6961>This command already exists!</color>"))
+                                        return@CommandExecutor
+                                    } else {
+                                        config.permissions[permission]!!.command.add(command)
+                                    }
+
+                                    if (tabComplete) {
+                                        if (config.permissions[permission]!!.tabComplete.contains(command)) {
+                                            commandSender.sendMessage(mm.deserialize("<color:#ff6961>This command already exists! <gray>(tabComplete)<gray></color>"))
+                                            return@CommandExecutor
+                                        } else {
+                                            config.permissions[permission]!!.tabComplete.add(command)
+                                        }
+                                    }
+
+                                    ConfigManager.save()
+                                })
+                            }
+                        }
+                    }
                 }
             }
+
             literalArgument("remove") {
                 replaceSuggestions(
                     ArgumentSuggestions.strings {
                         Main.instance.server.allServers.map { it.serverInfo.name }.toTypedArray()
                     })
-                executes(CommandExecutor { commandSender, commandArguments ->
+                stringArgument("server") {
+                    replaceSuggestions(
+                        ArgumentSuggestions.strings {
+                            Main.instance.server.allServers.map {
+                                serverSuggestion = it.serverInfo.name
+                                it.serverInfo.name
+                            }.toTypedArray()
+                        })
+                    stringArgument("permission") {
+                        replaceSuggestions(
+                            ArgumentSuggestions.strings {
+                                ConfigManager.commands.servers[serverSuggestion]?.permissions?.keys?.toTypedArray()
+                                    ?: emptyArray()
+                            })
+                        textArgument("command") {
+                            booleanArgument("tabComplete") {
+                                executes(CommandExecutor { commandSender, commandArguments ->
 
-                })
+                                    val server = commandArguments[0] as String
+                                    val permission = commandArguments[1] as String
+                                    val command = commandArguments[2] as String
+                                    val tabComplete = commandArguments[3] as Boolean
+                                    val config = ConfigManager.commands.servers[server]
+
+                                    if (config!!.permissions.contains(permission)) {
+                                        if (!config.permissions[permission]!!.command.contains(command)) {
+                                            commandSender.sendMessage(mm.deserialize("<color:#ff6961>This command does not exist!</color>"))
+                                            return@CommandExecutor
+                                        } else {
+                                            config.permissions[permission]!!.command.remove(command)
+                                        }
+
+                                        if (tabComplete) {
+                                            if (!config.permissions[permission]!!.tabComplete.contains(command)) {
+                                                commandSender.sendMessage(mm.deserialize("<color:#ff6961>This command does not exist!</color><gray>(tabComplete)<gray>"))
+                                                return@CommandExecutor
+                                            } else {
+                                                config.permissions[permission]!!.tabComplete.remove(command)
+                                            }
+                                        }
+                                    }
+
+                                    ConfigManager.save()
+                                })
+                            }
+                        }
+                    }
+                }
                 literalArgument("ALL") {
-                    executes(CommandExecutor { commandSender, commandArguments ->
+                    stringArgument("permission") {
+                        replaceSuggestions(
+                            ArgumentSuggestions.strings {
+                                ConfigManager.commands.servers["ALL"]?.permissions?.keys?.toTypedArray() ?: emptyArray()
+                            })
+                        textArgument("command") {
+                            booleanArgument("tabComplete") {
+                                executes(CommandExecutor { commandSender, commandArguments ->
 
-                    })
+                                    val server = "ALL"
+                                    val permission = commandArguments[0] as String
+                                    val command = commandArguments[1] as String
+                                    val tabComplete = commandArguments[2] as Boolean
+                                    val config = ConfigManager.commands.servers[server]
+
+                                    if (config!!.permissions.contains(permission)) {
+                                        if (!config.permissions[permission]!!.command.contains(command)) {
+                                            commandSender.sendMessage(mm.deserialize("<color:#ff6961>This command does not exist!</color>"))
+                                            return@CommandExecutor
+                                        } else {
+                                            config.permissions[permission]!!.command.remove(command)
+                                        }
+
+                                        if (tabComplete) {
+                                            if (!config.permissions[permission]!!.tabComplete.contains(command)) {
+                                                commandSender.sendMessage(mm.deserialize("<color:#ff6961>This command does not exist!</color><gray>(tabComplete)<gray>"))
+                                                return@CommandExecutor
+                                            } else {
+                                                config.permissions[permission]!!.tabComplete.remove(command)
+                                            }
+                                        }
+                                    }
+
+                                    ConfigManager.save()
+                                })
+                            }
+                        }
+                    }
                 }
             }
+
             literalArgument("list") {
                 executes(CommandExecutor { commandSender, commandArguments ->
 
-                })
+                    val config = ConfigManager.commands.servers.map { (serverName, serverData) ->
+                        val permissionsList =
+                            serverData.permissions.entries.joinToString("\n") { (permissionName, commandData) ->
+                                val commandList =
+                                    commandData.command.joinToString(", ") { "<gradient:#FF5733:#C70039>$it</gradient>" }
+                                val tabCompleteList =
+                                    commandData.tabComplete.joinToString(", ") { "<gradient:#900C3F:#581845>$it</gradient>" }
 
+                                "<white>$permissionName</white> -> " + "<gray>Commands:</gray> [$commandList], " + "<gray>TabComplete:</gray> [$tabCompleteList]"
+                            }
+
+                        "<bold><gradient:#008080:#40E0D0>Server:</gradient> <gradient:#8A2BE2:#9370DB>$serverName</gradient></bold>\n$permissionsList"
+                    }.joinToString("\n\n")
+
+                    val message = mm.deserialize(config)
+
+                    commandSender.sendMessage(message)
+
+                })
             }
         }
     }
