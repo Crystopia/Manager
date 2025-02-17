@@ -46,7 +46,7 @@ class NetworkCommand {
                             val reporter = ReportCommand().getPlayerName(report.value.reporterUUID)
 
                             val reportMessage = """
-                            <click:run_command:'/network reports management management view ${report.value.uuid}'>
+                            <click:run_command:'/network reports management view ${report.value.uuid}'>
                             <st><gray>──────────────</gray></st>
                             <color:#ffff9e><b>📌 Report:</b></color>
                             <gray><st>-</st> <color:#fff8c2>Player:</color> $reportedPlayer</gray>
@@ -115,13 +115,13 @@ class NetworkCommand {
                                     }
                                 }
                             }</gray>
-                            <click:suggest_command:'/network reports management management claim ${report.uuid}'><gray><st>-</st> <color:#fff8c2>Team Claim by:</color> ${
+                            <click:suggest_command:'/network reports management claim ${report.uuid}'><gray><st>-</st> <color:#fff8c2>Team Claim by:</color> ${
                                 ReportCommand().getPlayerName(
                                     report.claim.toString()
                                 )
                             }</gray></click>
                         
-                        <b><color:#809c96><click:suggest_command:'/network reports management management archiv ${uuid}'>[ARCHIV]</click></color> <color:#9cff91><click:suggest_command:'/network reports management management resolve ${uuid}'>[RESOLVE]</click></color> <color:#ff6663><click:suggest_command:'/network reports management management delete ${uuid}'>[DELETE]</click></color></b>
+                        <b><color:#809c96><click:suggest_command:'/network reports management archiv ${uuid}'>[ARCHIV]</click></color> <color:#9cff91><click:suggest_command:'/network reports management resolve ${uuid}'>[RESOLVE]</click></color> <color:#ff6663><click:suggest_command:'/network reports management delete ${uuid}'>[DELETE]</click></color></b>
                             <st><gray>──────────────</gray></st>
                           
                             """.trimIndent()
@@ -296,9 +296,9 @@ class NetworkCommand {
                                 }
                             }</gray>
 
-    <click:suggest_command:'/network reports management management claim ${report.uuid}'><gray><st>-</st> <color:#fff8c2>Team Claim by:</color> $claimed</gray></click>
+    <click:suggest_command:'/network reports management claim ${report.uuid}'><gray><st>-</st> <color:#fff8c2>Team Claim by:</color> $claimed</gray></click>
     
-    <b><color:#809c96><click:suggest_command:'/network reports management management archiv ${uuid}'>[ARCHIV]</click></color> <color:#9cff91><click:suggest_command:'/network reports management management resolve ${uuid}'>[RESOLVE]</click></color> <color:#ff6663><click:suggest_command:'/network reports management management delete ${uuid}'>[DELETE]</click></color></b>
+    <b><color:#809c96><click:suggest_command:'/network reports management archiv ${uuid}'>[ARCHIV]</click></color> <color:#9cff91><click:suggest_command:'/network reports management resolve ${uuid}'>[RESOLVE]</click></color> <color:#ff6663><click:suggest_command:'/network reports management delete ${uuid}'>[DELETE]</click></color></b>
     <st><gray>──────────────</gray></st>
 """.trimIndent()
 
@@ -622,48 +622,77 @@ class NetworkCommand {
                     stringArgument("time") {
                         textArgument("message") {
                             executes(CommandExecutor { commandSource, commandArguments ->
-                                val player = Main.instance.server.getPlayer(commandArguments[0] as String).get()
-                                val message = commandArguments[2] as String
-                                var time = ParseTime().parseTimeString(commandArguments[1] as String)
+                                val isPlayer = Main.instance.server.getPlayer(commandArguments[0] as String)
+
+                                if (isPlayer.isPresent) {
+                                    val player = Main.instance.server.getPlayer(commandArguments[0] as String).get()
+
+                                    val message = commandArguments[2] as String
+                                    var time = ParseTime().parseTimeString(commandArguments[1] as String)
 
 
-                                val banned = ConfigManager.ban.bannedplayers[player.uniqueId.toString()]
-                                if (banned != null && !banned.ended) {
-                                    commandSource.sendMessage(mm.deserialize("<color:#ff948c>This member is already banned!</color>"))
-                                    return@CommandExecutor
-                                }
-                                val timestamp = Instant.now().plus(time).toString()
+                                    val banned = ConfigManager.ban.bannedplayers[player.uniqueId.toString()]
+                                    if (banned != null && !banned.ended) {
+                                        commandSource.sendMessage(mm.deserialize("<color:#ff948c>This member is already banned!</color>"))
+                                        return@CommandExecutor
+                                    }
+                                    val timestamp = Instant.now().plus(time).toString()
 
-                                ConfigManager.ban.bannedplayers[player.uniqueId.toString()] = BannedPlayer(
-                                    uuid = player.uniqueId.toString(),
-                                    banUUID = UUID.randomUUID().toString(),
-                                    createdAt = timestamp,
-                                    reason = message,
-                                    banIntID = TypeVariabeln().getBanIntID(),
-                                )
-                                ConfigManager.save()
-
-                                commandSource.sendMessage(mm.deserialize("<color:#8aff8c>You have successfully created the playe <color:#ffd36e>${player.username}</color> for <gray>${time.toDays()}d</gray> <gray>${time.toHours()}h</gray> <gray>${time.toMinutes()}m</gray> </color>"))
-
-
-                                val ban = ConfigManager.ban.bannedplayers[player.uniqueId.toString()]
-
-                                val parts = ban!!.createdAt.split("-")
-                                val formattedDate = "${parts[1]}-${parts[0]}"
-                                player.disconnect(
-                                    mm.deserialize(
-                                        ConfigManager.ban.banMessage.replace(
-                                            "{player}", player.username
-                                        ).replace("{message}", message)
-                                            .replace("{days}", time.toDaysPart().toString().replace("-", ""))
-                                            .replace("{hours}", time.toHoursPart().toString().replace("-", ""))
-                                            .replace("{minutes}", time.toMinutesPart().toString().replace("-", ""))
-                                            .replace("{seconds}", time.toSecondsPart().toString().replace("-", ""))
-                                            .replace("{id}", ban!!.banIntID.toString())
-                                            .replace("{uuid}", ban.banUUID.toString())
-                                            .replace("{createdAt}", formattedDate)
+                                    ConfigManager.ban.bannedplayers[player.uniqueId.toString()] = BannedPlayer(
+                                        uuid = player.uniqueId.toString(),
+                                        banUUID = UUID.randomUUID().toString(),
+                                        createdAt = timestamp,
+                                        reason = message,
+                                        banIntID = TypeVariabeln().getBanIntID(),
                                     )
-                                )
+                                    ConfigManager.save()
+
+                                    commandSource.sendMessage(mm.deserialize("<color:#8aff8c>You have successfully created the playe <color:#ffd36e>${player.username}</color> for <gray>${time.toDays()}d</gray> <gray>${time.toHours()}h</gray> <gray>${time.toMinutes()}m</gray> </color>"))
+
+
+                                    val ban = ConfigManager.ban.bannedplayers[player.uniqueId.toString()]
+
+                                    val parts = ban!!.createdAt.split("-")
+                                    val formattedDate = "${parts[1]}-${parts[0]}"
+                                    player.disconnect(
+                                        mm.deserialize(
+                                            ConfigManager.ban.banMessage.replace(
+                                                "{player}", player.username
+                                            ).replace("{message}", message)
+                                                .replace("{days}", time.toDaysPart().toString().replace("-", ""))
+                                                .replace("{hours}", time.toHoursPart().toString().replace("-", ""))
+                                                .replace("{minutes}", time.toMinutesPart().toString().replace("-", ""))
+                                                .replace("{seconds}", time.toSecondsPart().toString().replace("-", ""))
+                                                .replace("{id}", ban!!.banIntID.toString())
+                                                .replace("{uuid}", ban.banUUID.toString())
+                                                .replace("{createdAt}", formattedDate)
+                                        )
+                                    )
+                                } else {
+                                    val uuid = commandArguments[0] as String
+
+                                    val message = commandArguments[2] as String
+                                    var time = ParseTime().parseTimeString(commandArguments[1] as String)
+
+
+                                    val banned = ConfigManager.ban.bannedplayers[uuid]
+                                    if (banned != null && !banned.ended) {
+                                        commandSource.sendMessage(mm.deserialize("<color:#ff948c>This member is already banned!</color>"))
+                                        return@CommandExecutor
+                                    }
+                                    val timestamp = Instant.now().plus(time).toString()
+
+                                    ConfigManager.ban.bannedplayers[uuid] = BannedPlayer(
+                                        uuid = uuid,
+                                        banUUID = UUID.randomUUID().toString(),
+                                        createdAt = timestamp,
+                                        reason = message,
+                                        banIntID = TypeVariabeln().getBanIntID(),
+                                    )
+                                    ConfigManager.save()
+
+                                    commandSource.sendMessage(mm.deserialize("<color:#8aff8c>You have successfully created the playe <color:#ffd36e>${uuid}</color><gray>(not Online)</gray> for <gray>${time.toDays()}d</gray> <gray>${time.toHours()}h</gray> <gray>${time.toMinutes()}m</gray> </color>"))
+                                }
                             })
                         }
                     }
@@ -849,7 +878,8 @@ class NetworkCommand {
                     stringArgument("permission") {
                         replaceSuggestions(
                             ArgumentSuggestions.strings {
-                                ConfigManager.commands.servers["ALL"]?.permissions?.keys?.toTypedArray() ?: emptyArray()
+                                ConfigManager.commands.servers["ALL"]?.permissions?.keys?.toTypedArray()
+                                    ?: emptyArray()
                             })
                         textArgument("command") {
                             booleanArgument("tabComplete") {
@@ -954,7 +984,8 @@ class NetworkCommand {
                     stringArgument("permission") {
                         replaceSuggestions(
                             ArgumentSuggestions.strings {
-                                ConfigManager.commands.servers["ALL"]?.permissions?.keys?.toTypedArray() ?: emptyArray()
+                                ConfigManager.commands.servers["ALL"]?.permissions?.keys?.toTypedArray()
+                                    ?: emptyArray()
                             })
                         textArgument("command") {
                             booleanArgument("tabComplete") {
