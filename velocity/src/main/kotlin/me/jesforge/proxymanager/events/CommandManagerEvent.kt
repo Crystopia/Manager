@@ -24,8 +24,6 @@ class CommandManagerEvent {
 
         val allowedCommands = getAllowedTabCompleteFromPlayer(player, serverName)
 
-        println(allowedCommands)
-
         event.rootNode.children.removeIf { child ->
             val command = child.name.lowercase()
             !allowedCommands.contains(
