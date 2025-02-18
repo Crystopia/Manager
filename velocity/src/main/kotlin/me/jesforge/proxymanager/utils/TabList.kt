@@ -13,22 +13,31 @@ fun updateTabList(player: Player) {
 
     player.sendPlayerListHeaderAndFooter(
         mm.deserialize(
-            "<gray><i>ᴘʟᴀʏɪɴɢ ᴏɴ ᴄʀʏѕᴛᴏᴘɪᴀ.ɴᴇᴛ</i></gray>\n\n\n\n\n\n\uD83E\uDD91\uF801\uD83D\uDEF9\uF801\uD83D\uDEB2\uF801⚙\uF801\uFE0F\uF801\uD83D\uDE18\n" + "" + "\n"
+            "<gray><i>ᴘʟᴀʏɪɴɢ ᴏɴ ᴄʀʏѕᴛᴏᴘɪᴀ.ɴᴇᴛ</i></gray>\n\n\n\n\n\n\uD83E\uDD91\uF801\uD83D\uDEF9\uF801\uD83D\uDEB2\uF801⚙\uF801\uFE0F\uF801\uD83D\uDE18\n"
         ), // Header
         mm.deserialize(
-            "\n\n          <color:#c0ff73>ʏᴏᴜ ᴀʀᴇ ᴄᴜʀʀᴇɴᴛʟʏ ᴏɴ ${player.currentServer.get().server.serverInfo.name}</color>          \n          <gray>ѕᴇʀᴠᴇʀ: ${player.currentServer.get().server.playersConnected.size.toString()} <st><b> </b></st> ɴᴇᴛᴡᴏʀᴋ: ${Main.instance.server.playerCount.toString()}</gray>          \n\nᴄʜᴀᴛᴍᴏᴅᴇ: {chatmode}                                           \nᴠᴇʀѕɪᴏɴ: {version}                                             \n<gray></gray>".replace(
-                "{version}", ConfigManager.settings.serverData.serverVersion
-            ).replace("{chatmode}", ConfigManager.player.players[player.uniqueId.toString()]!!.chatMode.toString())
+            "\n\n          <color:#c0ff73>ʏᴏᴜ ᴀʀᴇ ᴄᴜʀʀᴇɴᴛʟʏ ᴏɴ ${player.currentServer.get().server.serverInfo.name}</color>          \n          <gray>ѕᴇʀᴠᴇʀ: ${player.currentServer.get().server.playersConnected.size} <st><b> </b></st> ɴᴇᴛᴡᴏʀᴋ: ${Main.instance.server.playerCount}</gray>          \n\nᴄʜᴀᴛᴍᴏᴅᴇ: {chatmode}                                           \nᴠᴇʀѕɪᴏɴ: {version}                                             \n<gray></gray>"
+                .replace("{version}", ConfigManager.settings.serverData.serverVersion)
+                .replace("{chatmode}", ConfigManager.player.players[player.uniqueId.toString()]!!.chatMode.toString())
         )
     )
 
     tabList.entries.forEach { tabList.removeEntry(it.profile.id) }
 
-
     Main.instance.server.allPlayers.forEach { onlinePlayer ->
-        tabList.addEntry(
-            TabListEntry.builder().tabList(tabList).profile(onlinePlayer.gameProfile)
-                .displayName(mm.deserialize(getLuckPermsPrefix(onlinePlayer))).build()
-        )
+        val onlineTabList = onlinePlayer.tabList
+
+        onlineTabList.entries.forEach { onlineTabList.removeEntry(it.profile.id) }
+
+        Main.instance.server.allPlayers.forEach { targetPlayer ->
+            onlineTabList.addEntry(
+                TabListEntry.builder().tabList(onlineTabList).profile(targetPlayer.gameProfile)
+                    .displayName(mm.deserialize("${getLuckPermsPrefix(targetPlayer)} ${targetPlayer.username}"))
+                    .gameMode(1)
+                    .listed(true)
+                    .build()
+            )
+        }
     }
+
 }

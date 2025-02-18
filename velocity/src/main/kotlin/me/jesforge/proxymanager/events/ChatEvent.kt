@@ -21,11 +21,11 @@ class ChatEvent {
         val message = event.message
 
         if (playerData == null) {
-            return  // No player data, so no processing
+            return
         }
 
-        val formattedMessage: Component = mm.deserialize("${getLuckPermsPrefix(player)}: $message")
-        
+        val formattedMessage: Component = mm.deserialize("${getLuckPermsPrefix(player)} ${player.username}: $message")
+
         if (playerData.chatMode == ChatModeType.NONE || playerData.chatNotify == ChatNoitfiyType.NONE) {
             player.sendMessage(mm.deserialize("<color:#f8ffd4>You are in mute mode and cannot see or write messages. <gray>Use /chat to change your mode.</gray></color>"))
             return
@@ -33,25 +33,19 @@ class ChatEvent {
 
         val messageRecipients = when {
             playerData.chatMode == ChatModeType.ALL || playerData.chatNotify == ChatNoitfiyType.ALL -> Main.instance.server.allPlayers
-            playerData.chatMode == ChatModeType.SERVER || playerData.chatNotify == ChatNoitfiyType.SERVER -> Main.instance.server.allPlayers
-            else -> return  // If no conditions match, don't send any messages
+            playerData.chatMode == ChatModeType.SERVER || playerData.chatNotify == ChatNoitfiyType.SERVER -> player.currentServer.get().server.playersConnected
+            else -> return
         }
 
-        messageRecipients.forEach { recipients ->
-            // Only send message to players with matching settings
-            if (shouldSendToPlayer(recipients)) {
-                recipients.sendMessage(formattedMessage)
+        messageRecipients.forEach { recipient ->
+            if (shouldSendToPlayer(recipient)) {
+                recipient.sendMessage(formattedMessage)
             }
         }
     }
 
     private fun shouldSendToPlayer(player: Player): Boolean {
         val playerData = ConfigManager.player.players[player.uniqueId.toString()]
-        return playerData != null && (
-                playerData.chatMode == ChatModeType.ALL || 
-                playerData.chatNotify == ChatNoitfiyType.ALL || 
-                playerData.chatMode == ChatModeType.SERVER || 
-                playerData.chatNotify == ChatNoitfiyType.SERVER
-        )
+        return playerData != null && (playerData.chatMode == ChatModeType.ALL || playerData.chatNotify == ChatNoitfiyType.ALL || playerData.chatMode == ChatModeType.SERVER || playerData.chatNotify == ChatNoitfiyType.SERVER)
     }
 }

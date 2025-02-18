@@ -669,7 +669,8 @@ class NetworkCommand {
                                         )
                                     )
                                 } else {
-                                    val uuid = commandArguments[0] as String
+                                    val uuid =
+                                        ConfigManager.mcPlayerCache.mcPlayers.find { player -> player.name == commandArguments[0] }?.uuid.toString()
 
                                     val message = commandArguments[2] as String
                                     var time = ParseTime().parseTimeString(commandArguments[1] as String)
@@ -878,8 +879,7 @@ class NetworkCommand {
                     stringArgument("permission") {
                         replaceSuggestions(
                             ArgumentSuggestions.strings {
-                                ConfigManager.commands.servers["ALL"]?.permissions?.keys?.toTypedArray()
-                                    ?: emptyArray()
+                                ConfigManager.commands.servers["ALL"]?.permissions?.keys?.toTypedArray() ?: emptyArray()
                             })
                         textArgument("command") {
                             booleanArgument("tabComplete") {
@@ -984,8 +984,7 @@ class NetworkCommand {
                     stringArgument("permission") {
                         replaceSuggestions(
                             ArgumentSuggestions.strings {
-                                ConfigManager.commands.servers["ALL"]?.permissions?.keys?.toTypedArray()
-                                    ?: emptyArray()
+                                ConfigManager.commands.servers["ALL"]?.permissions?.keys?.toTypedArray() ?: emptyArray()
                             })
                         textArgument("command") {
                             booleanArgument("tabComplete") {

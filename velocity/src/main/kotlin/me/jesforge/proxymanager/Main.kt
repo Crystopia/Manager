@@ -12,6 +12,7 @@ import me.jesforge.proxymanager.commands.NetworkCommand
 import me.jesforge.proxymanager.commands.ReportCommand
 import me.jesforge.proxymanager.config.ConfigManager
 import me.jesforge.proxymanager.events.*
+import me.jesforge.proxymanager.tasks.TabListScheduler
 import net.luckperms.api.LuckPerms
 import net.luckperms.api.LuckPermsProvider
 import org.slf4j.Logger
@@ -56,6 +57,8 @@ class Main @Inject constructor(val logger: Logger, val server: ProxyServer) {
         server.eventManager.register(this, JoinEvent())
         server.eventManager.register(this, ChatEvent())
         server.eventManager.register(this, CommandManagerEvent())
+
+        TabListScheduler.start(server)
     }
 
 
