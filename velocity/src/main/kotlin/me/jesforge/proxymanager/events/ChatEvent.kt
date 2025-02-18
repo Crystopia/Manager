@@ -2,6 +2,7 @@ package me.jesforge.proxymanager.events
 
 import com.velocitypowered.api.event.Subscribe
 import com.velocitypowered.api.event.player.PlayerChatEvent
+import com.velocitypowered.api.proxy.Player
 import me.jesforge.proxymanager.Main
 import me.jesforge.proxymanager.config.ConfigManager
 import me.jesforge.proxymanager.utils.ChatModeType
