@@ -24,10 +24,11 @@ fun updateTabList(player: Player) {
 
     tabList.entries.forEach { tabList.removeEntry(it.profile.id) }
 
+
     Main.instance.server.allPlayers.forEach { onlinePlayer ->
         tabList.addEntry(
             TabListEntry.builder().tabList(tabList).profile(onlinePlayer.gameProfile)
-                .displayName(mm.deserialize(getLuckPermsPrefix(onlinePlayer))).gameMode(1).build()
+                .displayName(mm.deserialize(getLuckPermsPrefix(onlinePlayer))).build()
         )
     }
 }
