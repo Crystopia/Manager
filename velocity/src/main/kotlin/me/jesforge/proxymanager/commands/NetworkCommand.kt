@@ -727,8 +727,8 @@ class NetworkCommand {
                             textArgument("subTitle") {
                                 executes(CommandExecutor { commandSource, commandArguments ->
                                     val player = Main.instance.server.getPlayer(commandArguments[0] as String).get()
-                                    val title = commandArguments[2] as String
-                                    var subTitle = commandArguments[3] as String
+                                    val title = commandArguments[1] as String
+                                    var subTitle = commandArguments[2] as String
 
                                     player.showTitle(Title.title(mm.deserialize(title), mm.deserialize(subTitle)))
 
@@ -738,7 +738,7 @@ class NetworkCommand {
                     }
                 }
                 literalArgument("message") {
-                    stringArgument("player") {
+                    stringArgument("plyer") {
                         replaceSuggestions(
                             ArgumentSuggestions.strings {
                                 Main.instance.server.allPlayers.map { it.username }.toTypedArray()
@@ -746,7 +746,7 @@ class NetworkCommand {
                         textArgument("message") {
                             executes(CommandExecutor { commandSource, commandArguments ->
                                 val player = Main.instance.server.getPlayer(commandArguments[0] as String).get()
-                                val message = commandArguments[2] as String
+                                val message = commandArguments[1] as String
 
                                 player.sendMessage(mm.deserialize(message))
 
