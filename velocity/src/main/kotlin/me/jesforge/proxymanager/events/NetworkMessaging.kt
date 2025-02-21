@@ -35,39 +35,69 @@ class NetworkMessaging {
             val time = ParseTime().parseTimeString(input.readUTF() as String)
             val message = input.readUTF()
 
-            val player = Main.instance.server.getPlayer(targetName as String).get()
 
-            val banned = ConfigManager.ban.bannedplayers[player.uniqueId.toString()]
-            if (banned != null && !banned.ended) {
-                return
-            }
-            val timestamp = Instant.now().plus(time).toString()
+            val isPlayer = Main.instance.server.getPlayer(targetName as String)
 
-            ConfigManager.ban.bannedplayers[player.uniqueId.toString()] = BannedPlayer(
-                uuid = player.uniqueId.toString(),
-                banUUID = UUID.randomUUID().toString(),
-                createdAt = timestamp,
-                reason = message,
-                banIntID = TypeVariabeln().getBanIntID(),
-            )
-            ConfigManager.save()
+            if (isPlayer.isPresent) {
+                val player = Main.instance.server.getPlayer(targetName as String).get()
 
-            val ban = ConfigManager.ban.bannedplayers[player.uniqueId.toString()]
 
-            val parts = ban!!.createdAt.split("-")
-            val formattedDate = "${parts[1]}-${parts[0]}"
-            player.disconnect(
-                MiniMessage.miniMessage().deserialize(
-                    ConfigManager.ban.banMessage.replace(
-                        "{player}", player.username
-                    ).replace("{message}", message).replace("{days}", time.toDaysPart().toString().replace("-", ""))
-                        .replace("{hours}", time.toHoursPart().toString().replace("-", ""))
-                        .replace("{minutes}", time.toMinutesPart().toString().replace("-", ""))
-                        .replace("{seconds}", time.toSecondsPart().toString().replace("-", ""))
-                        .replace("{id}", ban!!.banIntID.toString()).replace("{uuid}", ban.banUUID.toString())
-                        .replace("{createdAt}", formattedDate)
+                val banned = ConfigManager.ban.bannedplayers[player.uniqueId.toString()]
+                if (banned != null && !banned.ended) {
+                    return
+                }
+                val timestamp = Instant.now().plus(time).toString()
+
+                ConfigManager.ban.bannedplayers[player.uniqueId.toString()] = BannedPlayer(
+                    uuid = player.uniqueId.toString(),
+                    banUUID = UUID.randomUUID().toString(),
+                    createdAt = timestamp,
+                    reason = message,
+                    banIntID = TypeVariabeln().getBanIntID(),
                 )
-            )
+                ConfigManager.save()
+
+
+                val ban = ConfigManager.ban.bannedplayers[player.uniqueId.toString()]
+
+                val parts = ban!!.createdAt.split("-")
+                val formattedDate = "${parts[1]}-${parts[0]}"
+                player.disconnect(
+                    MiniMessage.miniMessage().deserialize(
+                        ConfigManager.ban.banMessage.replace(
+                            "{player}", player.username
+                        ).replace("{message}", message)
+                            .replace("{days}", time.toDaysPart().toString().replace("-", ""))
+                            .replace("{hours}", time.toHoursPart().toString().replace("-", ""))
+                            .replace("{minutes}", time.toMinutesPart().toString().replace("-", ""))
+                            .replace("{seconds}", time.toSecondsPart().toString().replace("-", ""))
+                            .replace("{id}", ban!!.banIntID.toString())
+                            .replace("{uuid}", ban.banUUID.toString())
+                            .replace("{createdAt}", formattedDate)
+                    )
+                )
+            } else {
+                val uuid =
+                    ConfigManager.mcPlayerCache.mcPlayers.find { player -> player.name == targetName }?.uuid.toString()
+
+
+                val banned = ConfigManager.ban.bannedplayers[uuid]
+                if (banned != null && !banned.ended) {
+                    return
+                }
+                val timestamp = Instant.now().plus(time).toString()
+
+                ConfigManager.ban.bannedplayers[uuid] = BannedPlayer(
+                    uuid = uuid,
+                    banUUID = UUID.randomUUID().toString(),
+                    createdAt = timestamp,
+                    reason = message,
+                    banIntID = TypeVariabeln().getBanIntID(),
+                )
+                ConfigManager.save()
+
+            }
+
 
         }
     }
