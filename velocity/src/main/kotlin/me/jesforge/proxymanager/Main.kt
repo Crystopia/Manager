@@ -4,6 +4,7 @@ import com.google.inject.Inject
 import com.velocitypowered.api.event.Subscribe
 import com.velocitypowered.api.event.proxy.ProxyInitializeEvent
 import com.velocitypowered.api.proxy.ProxyServer
+import com.velocitypowered.api.proxy.messages.MinecraftChannelIdentifier
 import dev.jorel.commandapi.CommandAPI
 import dev.jorel.commandapi.CommandAPIVelocityConfig
 import me.jesforge.proxymanager.commands.ChatCommand
@@ -24,6 +25,7 @@ class Main @Inject constructor(val logger: Logger, val server: ProxyServer) {
         lateinit var instance: Main
     }
 
+    val CHANNEL: MinecraftChannelIdentifier = MinecraftChannelIdentifier.create("networkmanager", "channel")
     var luckpermsAPI: LuckPerms? = null
 
     init {
@@ -52,6 +54,9 @@ class Main @Inject constructor(val logger: Logger, val server: ProxyServer) {
 
         this.luckpermsAPI = LuckPermsProvider.get()
 
+        server.channelRegistrar.register(CHANNEL);
+
+        server.eventManager.register(this, NetworkMessaging())
         server.eventManager.register(this, ServerPreConnectEvent())
         server.eventManager.register(this, ServerPingEvent())
         server.eventManager.register(this, JoinEvent())

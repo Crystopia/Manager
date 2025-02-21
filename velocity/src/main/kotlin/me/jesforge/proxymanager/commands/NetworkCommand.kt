@@ -708,7 +708,7 @@ class NetworkCommand {
                     textArgument("message") {
                         executes(CommandExecutor { commandSource, commandArguments ->
                             val player = Main.instance.server.getPlayer(commandArguments[0] as String).get()
-                            val message = commandArguments[2] as String
+                            val message = commandArguments[1] as String
 
                             player.disconnect(mm.deserialize(message))
 
@@ -738,7 +738,7 @@ class NetworkCommand {
                     }
                 }
                 literalArgument("message") {
-                    stringArgument("plyer") {
+                    stringArgument("player") {
                         replaceSuggestions(
                             ArgumentSuggestions.strings {
                                 Main.instance.server.allPlayers.map { it.username }.toTypedArray()
